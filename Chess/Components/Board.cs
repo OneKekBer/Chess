@@ -4,6 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
+using FigureNamespace;
+
+
+
 namespace BoardNamespace
 {
     class Board
@@ -12,26 +17,46 @@ namespace BoardNamespace
         private static readonly int row = 8;
         private static readonly int column = 8;
 
-        string[,] board = new string[row, column];
+        public string[,] board = new string[row, column];
 
         public Board()
         {
-            FillBoard(board);
-            PrintBoard(board);
+            FillBoard();
+            //PrintBoard();
+        }
+
+        public void InitializeFigure(Figure figure)
+        {
+            board[figure.y , figure.x ] = figure.icon;
+
         }
 
 
+        public void GetFigureOnTitle(Tuple<int, int> coords)
+        {
+            string item = board[coords.Item2, coords.Item1];
 
+            if (item != "o")
+            {
+                Console.WriteLine(item);
+            }
+            //return null;
+        }
+
+        public void MoveFigure(Figure figure, Tuple<int, int> newCoords)
+        {
+            figure.ChnageLocation(newCoords);
+        }
 
         public void CheckFigureOnCoords(Tuple<int, int> coords) 
         {
 
         }
 
-        static void FillBoard(string[,] board)
+        void FillBoard()
         {
-            char currentChar = 'A';
-            int value = 1;
+            //char currentChar = 'A';
+            //int value = 1;
 
             for (int i = 0; i < board.GetLength(0); i++)
             {
@@ -56,9 +81,9 @@ namespace BoardNamespace
         }
 
 
-        static void PrintBoard(string[,] board)
+        public void PrintBoard()
         {
-            const string WhiteBackground = "\x1b[107m";
+            //const string WhiteBackground = "\x1b[107m";
             for (int i = 0; i < board.GetLength(0); i++)
             {
 
@@ -69,5 +94,7 @@ namespace BoardNamespace
                 Console.WriteLine();
             }
         }
-    }
-}
+
+
+    }//class
+}//ns

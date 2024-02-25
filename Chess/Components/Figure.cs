@@ -15,8 +15,9 @@ namespace FigureNamespace
 {
     class Figure
     {
-        private int x;
-        private int y;
+        public string icon;
+        public int x;
+        public int y;
         private EnumColor color;
 
         public Figure(int x, int y, EnumColor color)
@@ -24,8 +25,17 @@ namespace FigureNamespace
             this.x = x;
             this.y = y;
             this.color = color;
+            icon = "def";
         }
 
+
+
+        public void ChnageLocation(Tuple<int, int> newCoords)
+        { 
+            
+            x = newCoords.Item2;
+            y = newCoords.Item1;
+        }
 
 
     }
@@ -33,14 +43,9 @@ namespace FigureNamespace
 
     class Pawn : Figure
     {
-        public Pawn(int x, int y, EnumColor color) : base(x, y, color) {}
-
-        
-
-        public void Step()
+        public Pawn(int x, int y, EnumColor color) : base(x, y, color)
         {
-
+            this.icon = color == EnumColor.Black ? "bp" : "wp";
         }
-
     }
 }
