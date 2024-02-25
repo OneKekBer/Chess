@@ -9,6 +9,7 @@ namespace Program
     {
         public static void Main()
         {
+
             Console.OutputEncoding = System.Text.Encoding.UTF8;
             Console.WriteLine("Hello");
 
@@ -23,12 +24,7 @@ namespace Program
             //int userCoords = int.Parse(Console.ReadLine());
 
             board.GetFigureOnTitle(new Tuple<int, int>(2, 1));
-
-
-
-
-
-
+            
         }
     }
 }

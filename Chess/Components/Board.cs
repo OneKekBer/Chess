@@ -28,7 +28,6 @@ namespace BoardNamespace
         public void InitializeFigure(Figure figure)
         {
             board[figure.y , figure.x ] = figure.icon;
-
         }
 
 
