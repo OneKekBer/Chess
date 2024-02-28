@@ -11,20 +11,29 @@ namespace Program
         {
 
             Console.OutputEncoding = System.Text.Encoding.UTF8;
-            Console.WriteLine("Hello");
 
             Board board = new Board();
 
-            board.InitializeFigure(new Pawn(0, 1, EnumColor.Black));
-            board.InitializeFigure(new Pawn(1, 1, EnumColor.Black));
-            board.InitializeFigure(new Pawn(2, 1, EnumColor.Black));
+            board.InitializeFigure(new Pawn(1, 2, EnumColor.Black));
+            board.InitializeFigure(new Pawn(2, 2, EnumColor.Black));
+            board.InitializeFigure(new Pawn(3, 2, EnumColor.Black));
 
             board.PrintBoard();
 
-            //int userCoords = int.Parse(Console.ReadLine());
+            while (true)
+            {
 
-            board.GetFigureOnTitle(new Tuple<int, int>(2, 1));
-            
+                board.Turn();
+
+                board.PrintBoard();
+            }
+
+           
+
+
+
+
+
         }
     }
 }
