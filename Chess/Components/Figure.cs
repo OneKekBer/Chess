@@ -16,7 +16,14 @@ enum EnumColor
 
 namespace FigureNamespace
 {
-    class Figure
+
+    public interface IFgiure
+    {
+        public bool IsTurnValid(Tuple<int, int> newCoords);
+
+    }
+
+    class Figure 
     {
         
         public string icon;
@@ -32,19 +39,9 @@ namespace FigureNamespace
             icon = "jjj";
         }
 
-        public void ChangeX(int newX)
-        {
-            x = newX;
-        }
+        public virtual void Move(Tuple<int, int> newCoords) { }
 
-        public virtual void Move(Tuple<int, int> newCoords, object[,] board) { }
-
-        public void ChnageLocation(Tuple<int, int> newCoords)
-        {
-            
-        }
-
-
+        public virtual bool IsTurnValid(Tuple<int, int> newCoords) { return true; }
     }
 
 
@@ -57,20 +54,30 @@ namespace FigureNamespace
            
         }
 
-        public override void Move(Tuple<int, int> newCoords, object[,] board)
+        public override bool IsTurnValid(Tuple<int, int> newCoords)
         {
-            _ = this;
+            //Console.WriteLine($"y1 {y}");
+            //Console.WriteLine($"y2 {newCoords.Item2}");
 
-            Console.WriteLine($"{x} {y}");
+            //Console.WriteLine($"x1 {x}");
+            //Console.WriteLine($"x1 {newCoords.Item1}");
 
-            Board.EditBoard(new Tuple<int,int>(x, y), board, "o");
+            Console.WriteLine((y - newCoords.Item2 == -2 || y - newCoords.Item2 == 2) && x == newCoords.Item1);
 
+            if ((y - newCoords.Item2  == -2 || y - newCoords.Item2 == 2) && x == newCoords.Item1)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public override void Move(Tuple<int, int> newCoords)
+        {
+            
             x = newCoords.Item1 - 1;
             y = newCoords.Item2 - 1;
 
-            Console.WriteLine($"{x} {y}");
 
-            board[y, x] = this;
         }
 
 

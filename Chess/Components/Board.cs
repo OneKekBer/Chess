@@ -36,7 +36,7 @@ namespace BoardNamespace
             board[figure.y - 1 , figure.x - 1  ] = figure;
         }
 
-        public static void EditBoard<T>(Tuple<int,int> coords,object[,] board, T val)
+        public void EditBoard<T>(Tuple<int,int> coords, T val)
         {
             board[coords.Item2 == 0 ? coords.Item2 : coords.Item2 - 1, coords.Item1 == 0 ? coords.Item1 : coords.Item1 - 1] = val;
         }
@@ -44,7 +44,9 @@ namespace BoardNamespace
 
         public Figure GetFigureOnTitle(Tuple<int, int> coords)
         {
-            var item = board[coords.Item2 == 0 ? coords.Item2 : coords.Item2 - 1, coords.Item1 == 0 ? coords.Item1 : coords.Item1 - 1];
+            int x = coords.Item1 == 0 ? coords.Item1 : coords.Item1 - 1;
+            int y = coords.Item2 == 0 ? coords.Item2 : coords.Item2 - 1;
+            var item = board[y,x ];
 
             return item != emptyIcon ? (Figure)item : null;
 
@@ -67,7 +69,20 @@ namespace BoardNamespace
 
             Console.WriteLine($"{currentFigure.x} {currentFigure.y}");
 
-            currentFigure.Move(newCoords, board);
+
+
+            bool isTurnValid = currentFigure.IsTurnValid(newCoords);
+
+            if (isTurnValid)
+            {
+                Console.WriteLine("Turn is not valid!");
+                return;
+            }
+            currentFigure.Move(newCoords);
+
+            EditBoard(newCoords, currentFigure);
+
+            EditBoard(coords, "o");
 
             PrintBoard();
         }
@@ -110,7 +125,7 @@ namespace BoardNamespace
         {
             //Console.Clear();
             Console.WriteLine("------------");
-            //const string WhiteBackground = "\x1b[107m";
+      
             for (int i = 0; i < board.GetLength(0); i++)
             {
 
