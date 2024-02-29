@@ -62,20 +62,21 @@ namespace FigureNamespace
             //Console.WriteLine($"x1 {x}");
             //Console.WriteLine($"x1 {newCoords.Item1}");
 
-            Console.WriteLine((y - newCoords.Item2 == -2 || y - newCoords.Item2 == 2) && x == newCoords.Item1);
+            
 
-            if ((y - newCoords.Item2  == -2 || y - newCoords.Item2 == 2) && x == newCoords.Item1)
-            {
-                return false;
+
+            if (Math.Abs(y - newCoords.Item2) <= 2 && x == newCoords.Item1)
+            {   
+                return true;
             }
-            return true;
+            return false;
         }
 
         public override void Move(Tuple<int, int> newCoords)
         {
             
-            x = newCoords.Item1 - 1;
-            y = newCoords.Item2 - 1;
+            x = newCoords.Item1 ;
+            y = newCoords.Item2 ;
 
 
         }

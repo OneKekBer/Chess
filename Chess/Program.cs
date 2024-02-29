@@ -18,21 +18,17 @@ namespace Program
             board.InitializeFigure(new Pawn(2, 2, EnumColor.Black));
             board.InitializeFigure(new Pawn(3, 2, EnumColor.Black));
 
+
+            board.InitializeFigure(new Pawn(2, 7, EnumColor.White));
+
+
             board.PrintBoard();
 
             while (true)
             {
-
                 board.Turn();
 
-                board.PrintBoard();
             }
-
-           
-
-
-
-
 
         }
     }

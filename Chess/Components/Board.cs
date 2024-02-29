@@ -38,15 +38,16 @@ namespace BoardNamespace
 
         public void EditBoard<T>(Tuple<int,int> coords, T val)
         {
-            board[coords.Item2 == 0 ? coords.Item2 : coords.Item2 - 1, coords.Item1 == 0 ? coords.Item1 : coords.Item1 - 1] = val;
+            board[coords.Item2 == 0 ? coords.Item2 : coords.Item2 - 1, coords.Item1 == 0 ? coords.Item1 : coords.Item1 - 1] = val;  // мб это сложно читается
         }
 
 
         public Figure GetFigureOnTitle(Tuple<int, int> coords)
         {
-            int x = coords.Item1 == 0 ? coords.Item1 : coords.Item1 - 1;
+            int x = coords.Item1 == 0 ? coords.Item1 : coords.Item1 - 1; 
             int y = coords.Item2 == 0 ? coords.Item2 : coords.Item2 - 1;
-            var item = board[y,x ];
+
+            var item = board[y,x];
 
             return item != emptyIcon ? (Figure)item : null;
 
@@ -67,24 +68,31 @@ namespace BoardNamespace
 
             Tuple<int, int> newCoords = WriteCoords();
 
-            Console.WriteLine($"{currentFigure.x} {currentFigure.y}");
+            //Console.WriteLine($"{currentFigure.x} {currentFigure.y}");
 
 
 
-            bool isTurnValid = currentFigure.IsTurnValid(newCoords);
+            bool isTurnValid = currentFigure.IsTurnValid(newCoords); // кто должен валидировать ход
+                                                                     // фигура или доска или какой то движок игры мб
+                                                                     // но пока у меня будет валидация и в фигуре и доске 
+            Console.WriteLine($"TURN {isTurnValid}");
 
-            if (isTurnValid)
+            if (!isTurnValid)
             {
                 Console.WriteLine("Turn is not valid!");
                 return;
             }
+
             currentFigure.Move(newCoords);
 
-            EditBoard(newCoords, currentFigure);
+            EditBoard(newCoords, currentFigure); // проблема в том что внутри фигуры меняется x y и
+                                                 // они почти ни на что не влияют(онли валидацию) а
+                                                 // этот метод делает то что должна делать фигра я думаю это не по ооп!! 
 
             EditBoard(coords, "o");
 
             PrintBoard();
+
         }
 
 
