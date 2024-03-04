@@ -15,85 +15,96 @@ namespace BoardNamespace
 
     class Board
     {
-        public const string emptyIcon = "o";
-
 
         private static readonly int row = 8;
         private static readonly int column = 8;
 
-        public object[,] board = new object[row, column];
+        public Figure[,] board = new Figure[row, column]; // object = figure    empty == null 
 
 
-
-        public Board()
+        public void PlaceFigure(Figure figure, (int x, int y) coords) // intitalizing.....
         {
-            FillBoard();
-            //PrintBoard();
+            board[coords.y - 1, coords.x - 1] = figure;
         }
 
-        public void InitializeFigure(Figure figure)
+        public void EditBoard((int x, int y) coords, Figure figure)
         {
-            board[figure.y - 1 , figure.x - 1  ] = figure;
-        }
-
-        public void EditBoard<T>(Tuple<int,int> coords, T val)
-        {
-            board[coords.Item2 == 0 ? coords.Item2 : coords.Item2 - 1, coords.Item1 == 0 ? coords.Item1 : coords.Item1 - 1] = val;  // мб это сложно читается
+            board[coords.y == 0 ? coords.y : coords.y - 1, coords.x == 0 ? coords.x : coords.x - 1] = figure;  
         }
 
 
-        public Figure GetFigureOnTitle(Tuple<int, int> coords)
+        public Figure GetFigureOnTitle((int x, int y) coords) // я считаю здесь сделано умом
         {
-            int x = coords.Item1 == 0 ? coords.Item1 : coords.Item1 - 1; 
-            int y = coords.Item2 == 0 ? coords.Item2 : coords.Item2 - 1;
+            (int x, int y) = coords;
 
-            var item = board[y,x];
+            x = x == 0 ? x : x - 1; 
+            y = y == 0 ? y : y - 1;
 
-            return item != emptyIcon ? (Figure)item : null;
+            Figure item;
 
-        }
-
-        public void Turn()
-        {
-
-            Tuple<int, int> coords = WriteCoords();
-
-            Figure currentFigure = GetFigureOnTitle(coords);
-
-            if (currentFigure == null)
+            try 
             {
-                Console.WriteLine("There is no figure here!!");
-                return;
+                item = board[y,x];
             }
-
-            Tuple<int, int> newCoords = WriteCoords();
-
-            //Console.WriteLine($"{currentFigure.x} {currentFigure.y}");
-
-
-
-            bool isTurnValid = currentFigure.IsTurnValid(newCoords); // кто должен валидировать ход
-                                                                     // фигура или доска или какой то движок игры мб
-                                                                     // но пока у меня будет валидация и в фигуре и доске 
-            Console.WriteLine($"TURN {isTurnValid}");
-
-            if (!isTurnValid)
+            catch (IndexOutOfRangeException ex)
             {
-                Console.WriteLine("Turn is not valid!");
-                return;
+                Console.WriteLine($"Invalid !! {ex}");
+                return null;
             }
+            
+            return item != null ? (Figure)item : null;
 
-            currentFigure.Move(newCoords);
-
-            EditBoard(newCoords, currentFigure); // проблема в том что внутри фигуры меняется x y и
-                                                 // они почти ни на что не влияют(онли валидацию) а
-                                                 // этот метод делает то что должна делать фигра я думаю это не по ооп!! 
-
-            EditBoard(coords, "o");
-
-            PrintBoard();
+            
 
         }
+
+        //public void Turn()
+        //{
+
+        //    Figure currentFigure = GetFigureOnTitle(coords);
+
+        //    if (currentFigure == null)
+        //    {
+        //        Console.WriteLine("There is no figure here!!");
+        //        return;
+        //    }
+
+
+        //    // idea for validation is class validator with switch case 
+
+        //    //validation only in board or only in figure class 
+
+
+        //    (int x, int y) newCoords = WriteCoords();
+
+        //    //Console.WriteLine($"{currentFigure.x} {currentFigure.y}");
+
+
+
+        //    bool isTurnValid = currentFigure.IsTurnValid(newCoords); // кто должен валидировать ход
+        //                                                             // фигура или доска или какой то движок игры мб
+        //                                                             // но пока у меня будет валидация и в фигуре и доске 
+        //    //Console.WriteLine($"{isTurnValid}");
+
+        //    if (!isTurnValid)
+        //    {
+        //        Console.WriteLine("Turn is not valid!");
+        //        return;
+        //    }
+
+        //    currentFigure.Move(newCoords);
+
+
+
+        //    EditBoard(newCoords, currentFigure); // проблема в том что внутри фигуры меняется x y и
+        //                                         // они почти ни на что не влияют(онли валидацию) а
+        //                                         // этот метод делает то что должна делать фигра я думаю это не по ооп!! 
+
+        //    EditBoard(coords, "o");
+
+        //    PrintBoard();
+
+        //}
 
 
 
@@ -103,27 +114,12 @@ namespace BoardNamespace
 
         void FillBoard()
         {
-            //char currentChar = 'A';
-            //int value = 1;
-
             for (int i = 0; i < board.GetLength(0); i++)
             {
 
                 for (int j = 0; j < board.GetLength(1); j++)
                 {
-                    //if (i == 0 || i == 9)
-                    //{
-                    //    board[i, j] = Convert.ToString(j + 1);
-                    //    continue;
-                    //}
-                    //if (j == 0 || j == 9)
-                    //{
-                    //    board[i, j] = Convert.ToString((char)(currentChar));
-                    //    currentChar++;
-                    //    continue;
-                    //}
-
-                    board[i, j] = emptyIcon;
+                    board[i, j] = null;
                 }
             }
         }
@@ -136,37 +132,24 @@ namespace BoardNamespace
       
             for (int i = 0; i < board.GetLength(0); i++)
             {
-
                 for (int j = 0; j < board.GetLength(1); j++)
                 {
-                    if (board[i, j] is Figure)
+                    if (board[i, j] != null)
                     {
-                        Console.Write(((Figure)board[i, j]).icon + "\t");
+                        Console.Write(board[i, j].icon + "\t");
                         continue;
                     }
-                    Console.Write(board[i, j] + "\t");
+                    Console.Write("o" + "\t");
                 }
                 Console.WriteLine();
             }
         }
 
 
-        public static Tuple<int, int> WriteCoords()
-        {
-            Console.WriteLine("Enter X");
-            int x1 = int.Parse(Console.ReadLine());
-            Console.WriteLine("Enter Y");
-            int y1 = int.Parse(Console.ReadLine());
-
-            Tuple<int, int> coords = new Tuple<int, int>(x1, y1);
-
-            return coords;
-        }
+        
 
 
     }//class
-
-
 
 
 }//ns

@@ -2,32 +2,47 @@
 using BoardNamespace;
 using FigureNamespace;
 
+using EngineNamespace;
+
+
 
 namespace Program
 {
     class Program
     {
+        
+
         public static void Main()
         {
 
-            Console.OutputEncoding = System.Text.Encoding.UTF8;
+            
 
-            Board board = new Board();
+            //Console.OutputEncoding = System.Text.Encoding.UTF16;
 
-            board.InitializeFigure(new Pawn(1, 2, EnumColor.Black));
-            board.InitializeFigure(new Pawn(2, 2, EnumColor.Black));
-            board.InitializeFigure(new Pawn(3, 2, EnumColor.Black));
+            //Player player1 = new Player(EnumColor.Black);
+
+            Engine engine = new Engine();
+
+            Board board = new Board();// добавляет и убирает шахматы
+
+            board.PlaceFigure(new Pawn(EnumColor.Black), (1, 2)); // шахмате не нужно знать ее коорды 
+            board.PlaceFigure(new Pawn(EnumColor.Black), (2, 2)); // перемещение шахмат изменением индексов 
+            board.PlaceFigure(new Pawn(EnumColor.Black), (3, 2));
 
 
-            board.InitializeFigure(new Pawn(2, 7, EnumColor.White));
+            board.PlaceFigure(new Pawn(EnumColor.White), (1, 7));
 
 
             board.PrintBoard();
 
+            //add class game engine который будет отвечать за правила и валидацию
+            
             while (true)
             {
-                board.Turn();
 
+                engine.Turn(board);
+
+                
             }
 
         }
