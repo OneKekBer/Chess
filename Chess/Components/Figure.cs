@@ -11,20 +11,26 @@ public enum EnumColor
 {
     Black  = 0,
     White = 1,
-    Empty = 2
 }
 
 namespace FigureNamespace
 {
 
-  
+    public interface IFigureStaticMotion
+    {
+        (int x, int y)[] Directions { get; }
+    }
+
+    public interface IFigureDynamicMotion 
+    {
+        (int x, int y)[] OneStepCoordAdjustment { get; }
+    }
+
 
     abstract class Figure 
     {
         
         public string icon;
-
-        public abstract (int x, int y)[] Directions { get; }
 
 
         public EnumColor color;
@@ -33,7 +39,6 @@ namespace FigureNamespace
         public Figure(EnumColor color)
         {
             this.color = color;
-            icon = "F";
         }
 
         public virtual void Move() { }
@@ -42,7 +47,7 @@ namespace FigureNamespace
     }
 
 
-    class Pawn : Figure
+    class Pawn : Figure, IFigureStaticMotion
     {
       
         private bool IsMoved = false;
@@ -58,11 +63,11 @@ namespace FigureNamespace
             }
         }
 
-        public override (int x, int y)[] Directions
+        public (int x, int y)[] Directions
         {
             get
             {
-                if (IsMoved)
+                if (IsMoved)// ТУТ ПОСТАВИТЬ  IF COLOR == BLACK
                 {
                     return new (int x, int y)[] 
                     {
@@ -86,64 +91,165 @@ namespace FigureNamespace
 
 
 
-        public Pawn(EnumColor color) : base( color)
+        public Pawn(EnumColor color) : base(color)
         {
-            icon = color == EnumColor.Black ? "bp" : "wp";
+            icon = color == EnumColor.Black ? "♙" : "♟︎";
            
         }
 
-        
-
-        //public override bool IsTurnValid((int x, int y) newCoords)
-        //{
-        //    //Console.WriteLine($"y1 {y}");
-        //    //Console.WriteLine($"y2 {newCoords.Item2}");
-
-        //    //Console.WriteLine($"x1 {x}");
-        //    //Console.WriteLine($"x1 {newCoords.Item1}");
-
-        //    //if(x == null) return false; //null check
-
-        //    //if (board[] == 'o') return false; 
-            
-        //    //if (Math.Abs(y - newCoords.Item2) <= 2 && x == newCoords.Item1) // pawn`s ability 
-        //    //{   
-        //    //    return true;
-        //    //}
-        //    //return false;
-        //}
-
         public override void Move()
         {
-
             SetIsMove();
-
         }
 
 
     }
 
 
-    class Kngith : Figure
+    class Kngith : Figure, IFigureStaticMotion
     {
         public Kngith(EnumColor color) : base(color)
         {
-            icon = color == EnumColor.Black ? "bK" : "wk";
+            icon = color == EnumColor.Black ? "♘" : "♞";
 
         }
 
-        public override (int x, int y)[] Directions
+        public (int x, int y)[] Directions
         {
             get
             {
-                return new (int x, int y)[] 
+                return new (int x, int y)[]
                 {
+                    (2,1),
+                    (2,-1),
+                    (1,2),
+                    (1,-2),
+                    (-2,1),
+                    (-2,-1),
+                    (-1,-2), 
+                    (1,-2), 
+                    (-1, 2) 
+                };
+                
+            }
+        }
+    }
 
+
+    class Rook : Figure, IFigureDynamicMotion
+    {
+        public Rook(EnumColor color) : base(color)
+        {
+            icon = color == EnumColor.Black ? "♖" : "♜";
+
+        }
+
+        public (int x, int y)[] OneStepCoordAdjustment
+        {
+            get
+            {
+                return new (int x, int y)[]
+                {
+                    (1, 0), // right
+                    (-1, 0), // left
+                    (0, 1), // up
+                    (0, -1) // down
+                    
+                };
+            }
+        }
+
+    }
+
+
+    class Bishop : Figure, IFigureDynamicMotion
+    {
+        public Bishop(EnumColor color) : base(color)
+        {
+            icon = color == EnumColor.Black ? "♗" : "♝";
+
+        }
+
+        public (int x, int y)[] OneStepCoordAdjustment
+        {
+            get
+            {
+                return new (int x, int y)[]
+                {
+                    (-1, -1), // down left
+                    (-1, 1), // down right
+                    (1, 1), // up right
+                    (1, -1) // up left
+                    
                 };
             }
         }
     }
 
+    class Queen : Figure, IFigureDynamicMotion
+    {
+        public Queen(EnumColor color) : base(color)
+        {
+            icon = color == EnumColor.Black ? "♕" : "♛";
+
+        }
+
+        public (int x, int y)[] OneStepCoordAdjustment
+        {
+            get
+            {
+                return new (int x, int y)[]
+                {
+                    (-1, -1), // down left
+                    (-1, 1), // down right
+                    (1, 1), // up right
+                    (1, -1), // up left
+                    (1, 0), // right
+                    (-1, 0), // left
+                    (0, 1), // up
+                    (0, -1) // down
+                    
+                };
+            }
+        }
+    }
+
+
+    class King : Figure, IFigureStaticMotion
+    {
+ 
+        public (int x, int y)[] Directions
+        {
+            get
+            {
+                return new (int x, int y)[]
+                {
+                    (-1, -1), // down left
+                    (-1, 1), // down right
+                    (1, 1), // up right
+                    (1, -1), // up left
+                    (1, 0), // right
+                    (-1, 0), // left
+                    (0, 1), // up
+                    (0, -1) // down
+                };
+
+                
+
+            }
+        }
+
+
+
+        public King(EnumColor color) : base(color)
+        {
+            icon = color == EnumColor.Black ? "♔" : "♚";
+
+        }
+
+
+
+    }
 
 
 }

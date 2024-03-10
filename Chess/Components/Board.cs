@@ -11,6 +11,8 @@ using FigureNamespace;
 namespace BoardNamespace
 {
 
+
+    
     
 
     class Board
@@ -33,6 +35,67 @@ namespace BoardNamespace
         }
 
 
+        public void Initialize()
+        {
+            PlaceFigure(new Pawn(EnumColor.Black), (1, 2)); // шахмате не нужно знать ее коорды 
+            PlaceFigure(new Pawn(EnumColor.Black), (2, 2)); // перемещение шахмат изменением индексов 
+            PlaceFigure(new Pawn(EnumColor.Black), (3, 2));
+            PlaceFigure(new Pawn(EnumColor.Black), (4, 2));
+            PlaceFigure(new Pawn(EnumColor.Black), (5, 2));
+            PlaceFigure(new Pawn(EnumColor.Black), (6, 2));
+            PlaceFigure(new Pawn(EnumColor.Black), (7, 2));
+            PlaceFigure(new Pawn(EnumColor.Black), (8, 2));
+
+
+            PlaceFigure(new Kngith(EnumColor.Black), (2, 1));
+            PlaceFigure(new Kngith(EnumColor.Black), (7, 1));
+
+            PlaceFigure(new Rook(EnumColor.Black), (1, 1));
+            PlaceFigure(new Rook(EnumColor.Black), (8, 1));
+
+            PlaceFigure(new Bishop(EnumColor.Black), (3, 1));
+            PlaceFigure(new Bishop(EnumColor.Black), (6, 1));
+
+            PlaceFigure(new Queen(EnumColor.Black), (4, 1));
+
+            PlaceFigure(new King(EnumColor.Black), (5, 1));
+
+
+
+
+            PlaceFigure(new Pawn(EnumColor.White), (1, 7)); // шахмате не нужно знать ее коорды 
+            PlaceFigure(new Pawn(EnumColor.White), (2, 7)); // перемещение шахмат изменением индексов 
+            PlaceFigure(new Pawn(EnumColor.White), (3, 7));
+            PlaceFigure(new Pawn(EnumColor.White), (4, 7));
+            PlaceFigure(new Pawn(EnumColor.White), (5, 7));
+            PlaceFigure(new Pawn(EnumColor.White), (6, 7));
+            PlaceFigure(new Pawn(EnumColor.White), (7, 7));
+            PlaceFigure(new Pawn(EnumColor.White), (8, 7));
+
+
+            PlaceFigure(new Kngith(EnumColor.White), (2, 8));
+            PlaceFigure(new Kngith(EnumColor.White), (7, 8));
+
+            PlaceFigure(new Rook(EnumColor.White), (1, 8));
+            PlaceFigure(new Rook(EnumColor.White), (8, 8));
+
+            PlaceFigure(new Bishop(EnumColor.White), (3, 8));
+            PlaceFigure(new Bishop(EnumColor.White), (6, 8));
+
+            PlaceFigure(new Queen(EnumColor.White), (4, 8));
+
+            PlaceFigure(new King(EnumColor.White), (5, 8));
+
+
+
+
+
+
+
+
+            PrintBoard();
+        }
+
         public Figure GetFigureOnTitle((int x, int y) coords) // я считаю здесь сделано умом
         {
             (int x, int y) = coords;
@@ -52,65 +115,11 @@ namespace BoardNamespace
                 return null;
             }
             
-            return item != null ? (Figure)item : null;
+            return item != null ? item : null;
 
-            
-
+           
         }
 
-        //public void Turn()
-        //{
-
-        //    Figure currentFigure = GetFigureOnTitle(coords);
-
-        //    if (currentFigure == null)
-        //    {
-        //        Console.WriteLine("There is no figure here!!");
-        //        return;
-        //    }
-
-
-        //    // idea for validation is class validator with switch case 
-
-        //    //validation only in board or only in figure class 
-
-
-        //    (int x, int y) newCoords = WriteCoords();
-
-        //    //Console.WriteLine($"{currentFigure.x} {currentFigure.y}");
-
-
-
-        //    bool isTurnValid = currentFigure.IsTurnValid(newCoords); // кто должен валидировать ход
-        //                                                             // фигура или доска или какой то движок игры мб
-        //                                                             // но пока у меня будет валидация и в фигуре и доске 
-        //    //Console.WriteLine($"{isTurnValid}");
-
-        //    if (!isTurnValid)
-        //    {
-        //        Console.WriteLine("Turn is not valid!");
-        //        return;
-        //    }
-
-        //    currentFigure.Move(newCoords);
-
-
-
-        //    EditBoard(newCoords, currentFigure); // проблема в том что внутри фигуры меняется x y и
-        //                                         // они почти ни на что не влияют(онли валидацию) а
-        //                                         // этот метод делает то что должна делать фигра я думаю это не по ооп!! 
-
-        //    EditBoard(coords, "o");
-
-        //    PrintBoard();
-
-        //}
-
-
-
-        
-
-      
 
         void FillBoard()
         {
@@ -128,25 +137,40 @@ namespace BoardNamespace
         public void PrintBoard()
         {
             //Console.Clear();
+
             Console.WriteLine("------------");
-      
+            Console.WriteLine("\t a \t" + "b \t" + "c \t" + "d \t" + "e \t" + "f \t" + "g \t" + "h \t");
+            Console.WriteLine();
+
             for (int i = 0; i < board.GetLength(0); i++)
             {
+                Console.Write(i + 1 + "\t");
+                
+
                 for (int j = 0; j < board.GetLength(1); j++)
                 {
+
                     if (board[i, j] != null)
                     {
                         Console.Write(board[i, j].icon + "\t");
                         continue;
                     }
+                    
                     Console.Write("o" + "\t");
+
                 }
-                Console.WriteLine();
+                Console.WriteLine(i + 1);
+
+                
             }
+
+            Console.WriteLine();
+            Console.WriteLine("\t a \t" + "b \t" + "c \t" + "d \t" + "e \t" + "f \t" + "g \t" + "h \t");
+
         }
 
 
-        
+
 
 
     }//class

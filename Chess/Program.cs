@@ -16,35 +16,27 @@ namespace Program
         {
 
             
-
-            //Console.OutputEncoding = System.Text.Encoding.UTF16;
-
-            //Player player1 = new Player(EnumColor.Black);
+            Console.OutputEncoding = System.Text.Encoding.UTF8;
 
             Engine engine = new Engine();
 
             Board board = new Board();// добавляет и убирает шахматы
 
-            board.PlaceFigure(new Pawn(EnumColor.Black), (1, 2)); // шахмате не нужно знать ее коорды 
-            board.PlaceFigure(new Pawn(EnumColor.Black), (2, 2)); // перемещение шахмат изменением индексов 
-            board.PlaceFigure(new Pawn(EnumColor.Black), (3, 2));
+            board.Initialize();
 
-
-            board.PlaceFigure(new Pawn(EnumColor.White), (1, 7));
-
-
-            board.PrintBoard();
-
-            //add class game engine который будет отвечать за правила и валидацию
-            
+           
             while (true)
             {
-
                 engine.Turn(board);
-
                 
             }
 
         }
     }
 }
+
+// todo
+// 1 сделать так что если на пути фигуры есть тимейт то ход не возможен ---- 
+// 2 доделать все фигуры ---- 
+// 3 оформить доску ---- 
+// 4 переделать координаты в A 1 ----
