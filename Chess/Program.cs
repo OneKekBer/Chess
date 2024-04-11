@@ -3,6 +3,8 @@ using BoardNamespace;
 using FigureNamespace;
 
 using EngineNamespace;
+using Chess.Input;
+using Chess.Output;
 
 
 
@@ -14,16 +16,19 @@ namespace Program
 
         public static void Main()
         {
+            IInput input = new ConsoleInput();
 
-            
+            IOutput output = new ConsoleOutput();
+
             Console.OutputEncoding = System.Text.Encoding.UTF8;
 
-            Engine engine = new Engine();
+            Engine engine = new Engine(input, output);
 
-            Board board = new Board();// добавляет и убирает шахматы
+            Board board = new Board();
+
+            
 
             board.Initialize();
-
            
             while (true)
             {
@@ -35,8 +40,3 @@ namespace Program
     }
 }
 
-// todo
-// 1 сделать так что если на пути фигуры есть тимейт то ход не возможен ---- 
-// 2 доделать все фигуры ---- 
-// 3 оформить доску ---- 
-// 4 переделать координаты в A 1 ----

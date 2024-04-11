@@ -7,6 +7,10 @@ using System.Threading.Tasks;
 
 using FigureNamespace;
 using BoardNamespace;
+using Chess.Input;
+using Chess.Output;
+
+
 
 enum EnumX
 {
@@ -23,22 +27,25 @@ enum EnumX
 
 namespace EngineNamespace
 {
-    public enum Axis
+    
+    public class Engine 
     {
-        X = 0,
-        Y = 1,
-    }
+        public Engine(IInput input, IOutput output) 
+        {
+            Input = input;
+            Output = output;
+        }
 
-
-    class Engine
-    {
         public EnumColor CurrentTurn = EnumColor.White;
+
+        public IInput Input { get; }
+
+        public IOutput Output { get; }
 
         private (int x, int y) GetCoords() ////хотелось бы это вывести из класса
         {
-
-            int x1 = XInput();
-            int y1 = Input(Axis.Y);
+            int x1 = Input.InputLetter();
+            int y1 = Input.InputCoordinate(Axis.Y);
 
             return (x1, y1);
         }
@@ -47,48 +54,6 @@ namespace EngineNamespace
         {
             return (oldCoords.x - newCoords.x, oldCoords.y - newCoords.y);
         }
-
-
-
-        
-
-        private int XInput()
-        {
-             
-            
-            Console.WriteLine($"Enter x:");
-
-            do
-            {
-                string userInput = Console.ReadLine();
-                if (Enum.TryParse(userInput.ToLower(), out EnumX convertedX))
-                {
-                    return (int)convertedX;
-                }
-                Console.WriteLine("Enter a letter!!!");
-            }
-            while (true);
-
-        }
-
-
-        private int Input(Axis axis) //хотелось бы это вывести из класса
-        {
-            int value;
-            do
-            {
-                Console.WriteLine($"Enter {axis}:");
-                string userInput = Console.ReadLine();
-
-                if (int.TryParse(userInput.ToLower(), out value))
-                {
-                    return value;
-                }
-                Console.WriteLine("Enter a number!!!");
-
-            } while (true);
-        }
-
 
         public void ToggleTurn()
         {
@@ -104,6 +69,8 @@ namespace EngineNamespace
 
         public void Turn(Board board)
         {
+            Output.PrintBoard(board);
+            Console.WriteLine($"Current player: {CurrentTurn}");
             (int x, int y) oldCoords = GetCoords();
 
             Figure currentFigure = board.GetFigureOnTitle(oldCoords);
@@ -115,7 +82,6 @@ namespace EngineNamespace
             }
 
             (int x, int y) newCoords = GetCoords();
-
 
             (int x, int y) absoluteCoords = CalculateAbsoluteCoords(oldCoords, newCoords);
 
@@ -132,7 +98,6 @@ namespace EngineNamespace
             board.EditBoard(newCoords, currentFigure);
             currentFigure.Move();
 
-            board.PrintBoard();
             ToggleTurn();
         }
 
@@ -142,35 +107,24 @@ namespace EngineNamespace
             var enemyFigure = board.GetFigureOnTitle(newCoords); // search is enemy on title 
 
             //check whose turn now
-            //if (CurrentTurn != figure.color) return false;
-
+            if (CurrentTurn != figure.color) return false;
 
             //check on teammates
             if (enemyFigure != null && enemyFigure.color == figure.color) return false;
 
-
-
-
-
             if (figure is IFigureStaticMotion staticMotion)
             {
-                
+                foreach ((int x, int y) coord in staticMotion.Directions) // simple turn options
+                {
+                    if (coord == absoluteCoords && enemyFigure is null)
+                    {
+                        return true;
+                    }
+                }
 
                 if (figure is Pawn)              
                 {
-                    foreach ((int x, int y) coord in staticMotion.Directions) // simple turn options
-                    {
-                        Console.WriteLine(coord == absoluteCoords && enemyFigure is null);
-                        if (coord == absoluteCoords && enemyFigure is null)
-                        {
-                            return true;
-                        }
-                    }
-
-
-
                     Pawn pawn = (Pawn)figure; // converting figure to pawn 
-
 
                     foreach ((int x, int y) coord in pawn.DirectionsOnAttack) // attack options
                     {
@@ -182,24 +136,11 @@ namespace EngineNamespace
                     }
                     return false;
                 }
-
-                foreach ((int x, int y) coord in staticMotion.Directions) // simple turn options
-                {
-                    if (coord == absoluteCoords)
-                    {
-                        return true;
-                    }
-                }
-
                 return false;
-
             }
             else if (figure is IFigureDynamicMotion dynamicMotion)
             {
-
                 (int x, int y) correctTurnCoords = (0,0);
-
-                
 
                 // this part of code taking turn variants and searching coorect turn variant
                 foreach ( (int x, int y ) turnCoords in dynamicMotion.OneStepCoordAdjustment)
@@ -210,42 +151,38 @@ namespace EngineNamespace
                     {
                         currentCoords = (currentCoords.x + turnCoords.x, currentCoords.y + turnCoords.y);
 
-                        if (currentCoords.x > 8 || currentCoords.x < -8 || currentCoords.y > 8 || currentCoords.y < -8) break; // we have limit -8;8
-                                                                                                                               // if current cords goes out of the limits
-                                                                                                                               // it means that current turn variant is incorrect
-                        if (currentCoords == (0, 0)) correctTurnCoords = turnCoords;
-                        
+                        var figureOnTitle = board.GetFigureOnTitle(currentCoords);
 
+                        if (figureOnTitle is not null && currentCoords != (0, 0)) 
+                            break;
+                       
+
+                        if (currentCoords.x > 8 || currentCoords.x < -8 || currentCoords.y > 8 || currentCoords.y < -8) 
+                            break; // we have limit -8;8
+                                   // if current cords goes out of the limits
+                                   // it means that current turn variant is incorrect
+
+
+                        if (currentCoords == (0, 0))
+                            correctTurnCoords = turnCoords;
                     }
-                    
                 }
-
-
-                Console.WriteLine(correctTurnCoords);
-
                 //check if there is figure on the way
-                while (oldCoords != newCoords)
-                {
-                    oldCoords = (oldCoords.x + correctTurnCoords.x, oldCoords.y + correctTurnCoords.y);
-                    var figureOnTitle = board.GetFigureOnTitle(oldCoords);
-
-
-                    if(oldCoords == newCoords) break;
+                //while (oldCoords != newCoords)
+                //{
+                //    oldCoords = (oldCoords.x + correctTurnCoords.x, oldCoords.y + correctTurnCoords.y);
                     
-                    if(figureOnTitle is not null) return false;
-                    Console.WriteLine("OK");
 
 
-                }
+                //    if(oldCoords == newCoords) break;
+                    
+                //    if(figureOnTitle is not null) return false;
 
+                //}
                 return true;
             }
 
-          
-
             return false;
         }
-
-
     }
 }

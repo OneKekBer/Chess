@@ -10,19 +10,12 @@ using FigureNamespace;
 
 namespace BoardNamespace
 {
-
-
-    
-    
-
-    class Board
+    public class Board
     {
-
         private static readonly int row = 8;
         private static readonly int column = 8;
 
         public Figure[,] board = new Figure[row, column]; // object = figure    empty == null 
-
 
         public void PlaceFigure(Figure figure, (int x, int y) coords) // intitalizing.....
         {
@@ -33,7 +26,6 @@ namespace BoardNamespace
         {
             board[coords.y == 0 ? coords.y : coords.y - 1, coords.x == 0 ? coords.x : coords.x - 1] = figure;  
         }
-
 
         public void Initialize()
         {
@@ -61,8 +53,6 @@ namespace BoardNamespace
             PlaceFigure(new King(EnumColor.Black), (5, 1));
 
 
-
-
             PlaceFigure(new Pawn(EnumColor.White), (1, 7)); // шахмате не нужно знать ее коорды 
             PlaceFigure(new Pawn(EnumColor.White), (2, 7)); // перемещение шахмат изменением индексов 
             PlaceFigure(new Pawn(EnumColor.White), (3, 7));
@@ -86,14 +76,6 @@ namespace BoardNamespace
 
             PlaceFigure(new King(EnumColor.White), (5, 8));
 
-
-
-
-
-
-
-
-            PrintBoard();
         }
 
         public Figure GetFigureOnTitle((int x, int y) coords) // я считаю здесь сделано умом
@@ -111,69 +93,11 @@ namespace BoardNamespace
             }
             catch (IndexOutOfRangeException ex)
             {
-                Console.WriteLine($"Invalid !! {ex}");
+                Console.WriteLine($"Invalid !!");
                 return null;
             }
             
             return item != null ? item : null;
-
-           
         }
-
-
-        void FillBoard()
-        {
-            for (int i = 0; i < board.GetLength(0); i++)
-            {
-
-                for (int j = 0; j < board.GetLength(1); j++)
-                {
-                    board[i, j] = null;
-                }
-            }
-        }
-
-
-        public void PrintBoard()
-        {
-            //Console.Clear();
-
-            Console.WriteLine("------------");
-            Console.WriteLine("\t a \t" + "b \t" + "c \t" + "d \t" + "e \t" + "f \t" + "g \t" + "h \t");
-            Console.WriteLine();
-
-            for (int i = 0; i < board.GetLength(0); i++)
-            {
-                Console.Write(i + 1 + "\t");
-                
-
-                for (int j = 0; j < board.GetLength(1); j++)
-                {
-
-                    if (board[i, j] != null)
-                    {
-                        Console.Write(board[i, j].icon + "\t");
-                        continue;
-                    }
-                    
-                    Console.Write("o" + "\t");
-
-                }
-                Console.WriteLine(i + 1);
-
-                
-            }
-
-            Console.WriteLine();
-            Console.WriteLine("\t a \t" + "b \t" + "c \t" + "d \t" + "e \t" + "f \t" + "g \t" + "h \t");
-
-        }
-
-
-
-
-
     }//class
-
-
 }//ns

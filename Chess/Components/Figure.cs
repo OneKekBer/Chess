@@ -27,7 +27,7 @@ namespace FigureNamespace
     }
 
 
-    abstract class Figure 
+    public abstract class Figure 
     {
         
         public string icon;
@@ -93,7 +93,7 @@ namespace FigureNamespace
 
         public Pawn(EnumColor color) : base(color)
         {
-            icon = color == EnumColor.Black ? "♙" : "♟︎";
+            icon = color == EnumColor.Black ? "♙" : "♙";
            
         }
 
